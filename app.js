@@ -60,6 +60,4 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-process.on('warning', e => console.warn(e.stack));//log out memory leak errors
-
 module.exports = app;

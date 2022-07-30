@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const appRootPath = require('app-root-path');
 const Users = require(`../users/users.schema`)
-const Sessions = require(`./sessions.schema`)
+const Sessions = require(`../sessions/sessions.schema`)
 const bcrypt = require('bcrypt');
 const { errorHandler } = require('../../utils/error');
 const jwt = require('jsonwebtoken');

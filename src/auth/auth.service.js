@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Users = require(`../users/users.schema`)
-const Sessions = mongoose.model('Sessions');
+const Sessions = require(`../sessions/sessions.schema`)
 const bcrypt = require('bcrypt');
 const { errorHandler } = require('../../utils/error');
 const jwt = require('jsonwebtoken');

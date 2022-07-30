@@ -5,6 +5,8 @@ const tColors = require('colors'); // color module to have colorful terminal, do
 const appConfig=require(`./configs/app.config`)
 require(`./utils/db`);//connect to db
 
+process.on('warning', e => console.warn(e.stack));//log out memory leak errors
+
 /**
  * Module dependencies.
  */
