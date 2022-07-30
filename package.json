@@ -1,5 +1,5 @@
 {
-  "name": "olympiagym-express",
+  "name": "olympiagym",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ahmed-derbala/olympiagym-express"
+    "url": "https://github.com/ahmed-derbala/olympiagym"
   },
   "keywords": [
     "olympiagym"
