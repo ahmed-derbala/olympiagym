@@ -8,7 +8,7 @@ const authConf = require(`../../configs/auth.config`)
 
 
 module.exports.signup = async (params) => {
-    console.log(params,"servc params")
+    //console.log(params,"servc params")
     const salt = bcrypt.genSaltSync(authConf.saltRounds)
     params.user.password = bcrypt.hashSync(params.user.password, salt)
     if (!params.user.profile.displayname) params.user.profile.displayname = `${params.user.profile.firstname} ${params.user.profile.lastname}`
@@ -48,9 +48,9 @@ module.exports.signin = async (params) => {
             if (passwordCompare == false) {
                 return { message: 'password incorrect', data: null, status: 409 }
             }
-            const token = jwt.sign({ user: user._id, ip: params.req.ip, userAgent: params.req.headers['user-agent'] }, authConf.jwt.privateKey, { expiresIn: '30d' })
+            const token = jwt.sign({ user, ip: params.req.ip, userAgent: params.req.headers['user-agent'] }, authConf.jwt.privateKey, { expiresIn: '30d' })
 
-            return Sessions.create({ token, userId: user._id, headers: params.req.headers })
+            return Sessions.create({ token, user, headers: params.req.headers })
                 .then(session => {
                     return { status: 200, message: 'success', data: { user, token }, }
                 })

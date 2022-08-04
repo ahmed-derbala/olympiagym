@@ -9,14 +9,25 @@ const winston = require('winston'); //logging module
 const loaders = require('./helpers/loaders')
 const { mainMongo } = require(`./configs/mongo.config`)
 const morganLogger = require(`./utils/morgan`)
-const morganLoggerFormatted = morganLogger.formatToken()
-const {log}=require(`./utils/log`)
-var app = express();
+const { randomUUID } = require('crypto');
+
+
+let app = express();
+
+//process transaction id
+const tidHandler = (request, response, next) => {
+  if (!request.headers.tid) {
+    request.headers.tid = randomUUID()
+  }
+  response.append('tid', request.headers.tid);
+  next();
+}
 
 // view engine setup
-app.set('views', [`${__dirname}/src/`,`${__dirname}/src/index/views/`]);
+app.set('views', [`${__dirname}/src/`, `${__dirname}/src/index/views/`]);
 app.set('view engine', 'ejs');
 app.use(useragent.express());
+app.use(tidHandler)
 
 app.use(expressWinston.logger({
   transports: [
@@ -32,10 +43,7 @@ app.use(expressWinston.logger({
 }));
 
 
-app.use(morganLoggerFormatted(`:status :method :url :nl *userIp=:userIp userId=:userId userEmail=:userEmail :nl *body=:body :nl *browser=:browser os=:os platform=:platform :nl *origin=:origin isBot=:isBot referrer=:referrer :nl responseTime=[*:response-time*]`,
-  { stream: log.stream },
-));
-
+app.use(morganLogger())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -45,7 +53,7 @@ loaders.routes(app)//load routes
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
- // log({ level: 'debug', message: tColors.bgGreen(req.black) });
+  // log({ level: 'debug', message: tColors.bgGreen(req.black) });
   next(createError(404));
 });
 

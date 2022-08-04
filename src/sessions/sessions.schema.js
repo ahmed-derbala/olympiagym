@@ -7,8 +7,8 @@ const schema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
+    user: {
+        type: Object,
         ref: 'Users',
         required: true,
     },
@@ -23,6 +23,6 @@ const schema = new mongoose.Schema({
 schema.plugin(mongoosePaginate);
 schema.plugin(uniqueValidator);
 
-module.exports = mongoose.model('Sessions', schema);
+module.exports = mongoose.model('sessions', schema);
 
 

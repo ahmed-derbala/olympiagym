@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 const packagejson = require(`./package.json`);
 const ip = require("ip");
-const tColors = require('colors'); // color module to have colorful terminal, doesnt need to be loaded global
-const appConfig=require(`./configs/app.config`)
+const appConfig = require(`./configs/app.config`)
 require(`./utils/db`);//connect to db
+const { log } = require(`./utils/log`)
 
-process.on('warning', e => console.warn(e.stack));//log out memory leak errors
+process.on('warning', e => console.warn(e.stack));//print out memory leak errors
 
 /**
  * Module dependencies.
@@ -30,27 +30,27 @@ var server = http.createServer(app);
 if (appConfig.cluster > 0) {
   let cluster = require('cluster');
   if (cluster.isMaster) {
-    console.log(`cluster is enabled. ${appConfig.cluster} cpus are in use`.black.bgBlue)
-    // Create a worker for each CPU
-    for (let c = 1; c <= appConfig.cluster; c++) {
-      cluster.fork();
-    }
-
-    // Listen for dying workers
-    cluster.on('exit', function () {
-      console.log(`cluster exited`)
-      cluster.fork();
-    });
-
-  } else {
-    //launching the server
-    server.listen(appConfig.backend.port, console.log(`******** ${packagejson.name} ${packagejson.version} http://${ip.address()}:${appConfig.backend.port}/ NODE_ENV=${appConfig.NODE_ENV} fork ${cluster.worker.id} pid ${cluster.worker.process.pid} ********`.black.bgBlue));
-    server.on('error', onError);
-    server.on('listening', onListening);
+    log({ message:`cluster is enabled. ${appConfig.cluster} cpus are in use`, level: 'debug'})
+  // Create a worker for each CPU
+  for (let c = 1; c <= appConfig.cluster; c++) {
+    cluster.fork();
   }
+
+  // Listen for dying workers
+  cluster.on('exit', function () {
+    console.log(`cluster exited`)
+    cluster.fork();
+  });
+
+} else {
+  //launching the server
+  server.listen(appConfig.backend.port, console.log(`******** ${packagejson.name} ${packagejson.version} http://${ip.address()}:${appConfig.backend.port}/ NODE_ENV=${appConfig.NODE_ENV} fork ${cluster.worker.id} pid ${cluster.worker.process.pid} ********`));
+  server.on('error', onError);
+  server.on('listening', onListening);
+}
 } else {
   //launching the server without cluster
-  server.listen(appConfig.backend.port, console.log(`******** ${packagejson.name} ${packagejson.version} http://${ip.address()}:${appConfig.backend.port}/ NODE_ENV=${appConfig.NODE_ENV} ********`.black.bgBlue));
+  server.listen(appConfig.backend.port, console.log(`******** ${packagejson.name} ${packagejson.version} http://${ip.address()}:${appConfig.backend.port}/ NODE_ENV=${appConfig.NODE_ENV} ********`));
   server.on('error', onError);
   server.on('listening', onListening);
 }

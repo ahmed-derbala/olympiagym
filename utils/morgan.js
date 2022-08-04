@@ -1,62 +1,82 @@
-const logger = require('morgan');
+const morgan = require('morgan');
+const appConf = require(`../configs/app.config`);
+const { log } = require(`./log`)
+const _ = require('lodash');
+const { errorHandler } = require('./error');
 
 
-/**
- * this styles the log of the request
- * @param {*} params 
- * @returns 
- */
-exports.formatToken = () => {
+morgan.token('userIp', (req) => req.headers['x-forwarded-for'] || req.connection.remoteAddress);
 
-    logger.token('userIp', (req) => req.headers['x-forwarded-for'] || req.connection.remoteAddress);
-    logger.token('userId', (req) => {
-        if (req.user) {
-            return req.user._id;
-        }
-        return '-';
-    });
+morgan.token('user', (req) => {
+    if (!req.user) return JSON.stringify({});
+    return JSON.stringify(req.user);
+});
 
-    logger.token('userEmail', (req) => {
-        if (req.user) {
-            return req.user.email;
-        }
-        return '-';
-    });
+morgan.token('browser', (req) => {
+    return req.useragent.browser;
+});
 
-    logger.token('browser', (req) => {
-        return req.useragent.browser;
-    });
+morgan.token('os', (req) => {
+    return req.useragent.os;
+});
 
-    logger.token('os', (req) => {
-        return req.useragent.os;
-    });
+morgan.token('platform', (req) => {
+    return req.useragent.platform;
+});
 
-    logger.token('platform', (req) => {
-        return req.useragent.platform;
-    });
+morgan.token('isBot', (req) => {
+    return req.useragent.isBot;
+});
 
-    logger.token('isBot', (req) => {
-        return req.useragent.isBot;
-    });
+morgan.token('referrer', (req) => {
+    return req.headers.referrer || req.headers.referer;
+});
 
-    logger.token('referrer', (req) => {
-        return req.headers.referrer || req.headers.referer;
-    });
-
-    logger.token('body', (req) => {
-        if (req.body.password) {
-            req.body.password = '*****';
-        }
-        return JSON.stringify(req.body);
-    });
+morgan.token('body', (req) => {
+    if (req.body.password) {
+        req.body.password = '*****';
+    }
+    return JSON.stringify(req.body);
+});
+morgan.token('nl', (req) => {
     //new line
-    logger.token('nl', (req) => {
-        return '\n';
-    });
+    return '\n';
+});
 
-    logger.token('origin', (req) => {
-        return req.headers.origin;
-    });
+morgan.token('origin', (req) => {
+    return req.headers.origin;
+});
 
-    return logger
+morgan.token('tid', (req) => {
+    return req.headers.tid;
+});
+
+stream = {
+    write: function (req, encoding) {
+        try {
+            req = JSON.parse(req)
+        }
+        catch (e) {
+            //console.log(req,'req')
+            return errorHandler({ err: 'REQ_NOT_PARSED', req })
+        }
+
+        let level = 'error'
+        if (_.inRange(req.status, 200, 399)) level = 'debug'
+        if (_.inRange(req.status, 400, 499)) level = 'warn'
+
+        switch (level) {
+            case 'error':
+                errorHandler({ req });
+                break
+
+            default:
+                log({ req, level })
+        }
+    },
+};
+
+let morganLogger = () => {
+    return morgan(appConf.morgan.tokenString, { stream })
 }
+module.exports = morganLogger

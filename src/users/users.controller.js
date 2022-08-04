@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
-const Users = mongoose.model('Users');
-const users_srvc = require('./users_srvc')
+const Users = require(`./users.schema`)
+const usersSrvc = require('./users.service')
 
 
 
 
 
 module.exports.getUsers = async (req, res) => {
-    return users_srvc.getUsers()
+    return usersSrvc.getUsers()
         .then(users => {
             return res.status(200).json({ msg: 'users', data: users })
         })

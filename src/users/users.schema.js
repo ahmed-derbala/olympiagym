@@ -74,5 +74,5 @@ const schema = new mongoose.Schema({
 schema.plugin(mongoosePaginate);
 schema.plugin(uniqueValidator);
 
-module.exports = mongoose.model('Users', schema);
+module.exports = mongoose.model('users', schema);
 

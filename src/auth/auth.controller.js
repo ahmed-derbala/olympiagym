@@ -9,7 +9,8 @@ const authConfig = require(`../../configs/auth.config`)
 const authSrvc = require(`./auth.service`)
 
 module.exports.signup = async (req, res) => {
-    return authSrvc.signup({ user:req.body })
+    const { user } = req.body
+    return authSrvc.signup({ user })
         .then(result => {
             return res.status(result.status).json(result)
         })

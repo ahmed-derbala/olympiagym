@@ -1,32 +1,39 @@
 const { validationResult } = require('express-validator');
+const { log } = require(`./log`)
 
 exports.errorHandler = (params) => {
-    //console.log(params,'params err')
-    let status = 500
-    let response = {}
-    if (params.err) {
-        response.error = params.err
-        if(params.err.errors)response.error=params.err.errors
-        if (params.err.message) {
-            response.message = params.err.message
-        }
-        if (params.err.name) {
-            if (params.err.name == 'ValidationError') {
-                status = 409
-            }
-            if (params.err.name == 'TokenExpiredError') {
-                status = 401
-            }
-        }
-    }
-    response.status=status
+    if (!params) params = {}
+    if (!params.req) params.req = {}
 
-    console.error(`${JSON.stringify(response)}`.black.bgRed)
-    if (params.res) {
-        return params.res.status(status).json(response)
+    let status = 500
+    let errObject = {}
+    if (params.err) {
+        errObject.error = params.err
+        if (typeof params.err == 'object') {
+            if (params.err.errors) errObject.error = params.err.errors
+            if (params.err.message) {
+                errObject.message = params.err.message
+            }
+            if (params.err.name) {
+                if (params.err.name == 'ValidationError') {
+                    status = 409
+                }
+                if (params.err.name == 'TokenExpiredError') {
+                    status = 401
+                }
+            }
+        } 
     }
-   // return { status, message: 'error', error: params.err }
-   return response
+    errObject.status = status
+
+    //console.error(`${JSON.stringify(errObject)}`, 'errObject errorHandler')
+    errObject.req = params.req
+    errObject.level = 'error'
+    if (!errObject.message) errObject.message = 'error'
+    if (params.res) {
+        return params.res.status(status).json(errObject)
+    }
+    return log(errObject)
 };
 
 /**

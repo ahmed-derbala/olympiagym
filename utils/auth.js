@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const Users = mongoose.model('Users');
-const Sessions = mongoose.model('Sessions');
+const Users = require(`../src/users/users.schema`)
+const Sessions = require(`../src/sessions/sessions.schema`)
+const { errorHandler } = require('./error');
+const authConf = require(`../configs/auth.config`)
 
 
 exports.auth = (params) => {
@@ -28,7 +30,7 @@ exports.auth = (params) => {
                     return res.status(403).json({ msg: 'No session created with provided token' });
                 }
                 //verify token
-                return jwt.verify(req.headers.token, prefs.jwt.private_key, (err, decoded) => {
+                return jwt.verify(req.headers.token, authConf.jwt.privateKey, (err, decoded) => {
                     if (err) {
                         //if token is not required move on
                         if (params.isTokenRequired == false) {

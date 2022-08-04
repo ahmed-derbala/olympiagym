@@ -14,8 +14,8 @@ const auth = require(`${appRootPath}/utils/auth`).auth
 router.post('/signup',
   [
   //  check('user').exists(),
-    check('email').isEmail(),
-    check('password').isString().notEmpty(),
+    check('user.email').isEmail(),
+    check('user.password').isString().notEmpty(),
  //   check('user.phones').isArray(),
   //  check('user.phones.*.countryCode').isString().notEmpty(),
   //  check('user.phones.*.shortNumber').isString().notEmpty()
