@@ -3,7 +3,7 @@ const router = express.Router();
 const posts_ctrl = require(`${appRootPath}/src/posts/posts_ctrl`)
 const { check, query, param } = require('express-validator');
 const validatorCheck = require(`${appRootPath}/utils/error`).validatorCheck;
-const auth = require(`${appRootPath}/utils/auth`).auth
+const { authenticate } = require(`${appRootPath}/middlewares/authmw`)
 
 
 
@@ -11,7 +11,7 @@ const auth = require(`${appRootPath}/utils/auth`).auth
 
 router.route('/')
   .post(
-    auth(),
+    authenticate(),
     [
       check('text').isString().notEmpty(),
     ],

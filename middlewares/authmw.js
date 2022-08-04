@@ -2,11 +2,11 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const Users = require(`../src/users/users.schema`)
 const Sessions = require(`../src/sessions/sessions.schema`)
-const { errorHandler } = require('./error');
+const { errorHandler } = require('../utils/error');
 const authConf = require(`../configs/auth.config`)
 
 
-exports.auth = (params) => {
+exports.authenticate = (params) => {
     return function (req, res, next) {
         //check params
         if (params == null) params = {}

@@ -4,7 +4,7 @@ const appRootPath = require('app-root-path');
 const authCtrl = require(`${appRootPath}/src/auth/auth.controller`)
 const { check, query, param } = require('express-validator');
 const validatorCheck = require(`${appRootPath}/utils/error`).validatorCheck;
-const auth = require(`${appRootPath}/utils/auth`).auth
+const { authenticate } = require(`${appRootPath}/middlewares/authmw`)
 
 
 
@@ -13,12 +13,12 @@ const auth = require(`${appRootPath}/utils/auth`).auth
 
 router.post('/signup',
   [
-  //  check('user').exists(),
+    //  check('user').exists(),
     check('user.email').isEmail(),
     check('user.password').isString().notEmpty(),
- //   check('user.phones').isArray(),
-  //  check('user.phones.*.countryCode').isString().notEmpty(),
-  //  check('user.phones.*.shortNumber').isString().notEmpty()
+    //   check('user.phones').isArray(),
+    //  check('user.phones.*.countryCode').isString().notEmpty(),
+    //  check('user.phones.*.shortNumber').isString().notEmpty()
 
   ],
   validatorCheck,
@@ -33,7 +33,7 @@ router.post('/signin',
   authCtrl.signin)
 
 router.post('/signout',
-  auth(),
+  authenticate(),
   authCtrl.signout)
 
 module.exports = router;

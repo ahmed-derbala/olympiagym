@@ -4,7 +4,7 @@ const appRootPath = require('app-root-path');
 const authCtrl = require(`${appRootPath}/src/auth/auth.controller`)
 const { check, query, param } = require('express-validator');
 const validatorCheck = require(`${appRootPath}/utils/error`).validatorCheck;
-const auth = require(`${appRootPath}/utils/auth`).auth
+const { authenticate } = require(`${appRootPath}/middlewares/authmw`)
 
 
 

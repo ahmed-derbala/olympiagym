@@ -3,7 +3,7 @@ const router = express.Router();
 const usersCtrl = require(`./users.controller`)
 const { check, query, param } = require('express-validator');
 const validatorCheck = require(`../../utils/error`).validatorCheck;
-const auth = require(`../../utils/auth`).auth
+const { authenticate } = require(`../../middlewares/authmw`)
 
 
 
@@ -14,7 +14,7 @@ const auth = require(`../../utils/auth`).auth
 
 
 router.get('/',
-  auth(),
+  authenticate(),
   usersCtrl.getUsers)
 
 /*
