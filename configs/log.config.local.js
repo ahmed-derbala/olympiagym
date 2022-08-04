@@ -58,7 +58,7 @@ const createLoggerOptions = {
 
 module.exports = {
     transports: [
-      new transports.File(transportsOptions.file),
+     // new transports.File(transportsOptions.file),
       new transports.Console(transportsOptions.console),
       new transports.MongoDB(transportsOptions.mongo)
     ],

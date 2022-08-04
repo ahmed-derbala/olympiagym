@@ -9,7 +9,16 @@ const authConfig = require(`../../configs/auth.config`)
 const authSrvc = require(`./auth.service`)
 
 module.exports.signup = async (req, res) => {
-    const { user } = req.body
+    req.body = JSON.parse(JSON.stringify(req.body))
+    console.log(req.body, 'req.body');
+    const user = {}
+    if (req.body.user) user = req.body.user
+    else {
+        user.email = req.body['user.email']
+        user.password = req.body['user.password']
+        user.profile = {}
+        user.phones = []
+    }
     return authSrvc.signup({ user })
         .then(result => {
             return res.status(result.status).json(result)
@@ -18,9 +27,20 @@ module.exports.signup = async (req, res) => {
 }
 
 module.exports.signin = async (req, res) => {
-    const { user } = req.body
+    req.body = JSON.parse(JSON.stringify(req.body))
+    console.log(req.body, 'req.body');
+    const user = {}
+    if (req.body.user) user = req.body.user
+    else {
+        user.email = req.body['user.email']
+        user.password = req.body['user.password']
+        user.profile = {}
+        user.phones = []
+    }
     return authSrvc.signin({ user, req })
         .then(result => {
+            if (req.query.render == 'true') return res.redirect('/');
+
             return res.status(result.status).json(result)
         })
         .catch(err => errorHandler({ err, res }))

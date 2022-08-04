@@ -1,5 +1,6 @@
 # olympiagym
 express app to manage local gym
+THIS IS AN ATTEMPT TO CREATE A SINGLE PROJECT COMBINES BACK AND FRONT WITH EJS. ITS ABANDONNED FOR NOW
 
 # run dev envirement
 ```

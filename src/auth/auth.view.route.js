@@ -14,5 +14,9 @@ router.get('/', function (req, res, next) {
   res.render('auth/views/signup', { title: 'Express',message:null });
 });
 
+router.get('/signin', function (req, res, next) {
+  res.render('auth/views/signin', { title: 'Express',message:null });
+});
+
 
 module.exports = router;
