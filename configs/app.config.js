@@ -10,9 +10,6 @@ module.exports = {
     responseTimeAlert: 20000,//time in ms before considering a request timeout
     morgan: {
         //more infos: https://www.npmjs.com/package/morgan
-        //  tokenString: `:status :method :url :nl *userIp=:userIp userId=:userId userEmail=:userEmail :nl *body=:body :nl *browser=:browser os=:os platform=:platform :nl *origin=:origin isBot=:isBot referrer=:referrer :nl tid=:tid :nl responseTime=[*:response-time*]`,
         tokenString: `{"status"::status,"method":":method", "url":":url", "userIp":":userIp", "user": :user ,"body": :body,"browser":":browser", "os":":os", "platform":":platform" ,"origin":":origin", "isBot":":isBot", "referrer":":referrer","tid":":tid" ,"responseTime":":response-time"}`,
-      // tokenString:`{"status":":status"}`
-      //tokenString:':status'
     }
 }
